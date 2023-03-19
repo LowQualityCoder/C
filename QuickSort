@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <Windows.h>
+
+void qsort(int *, int, int);
+
+
+void main()
+{
+	int count = 10;
+	int i;
+	int num[10] = { 9,5,8,3,4,2,0,1,6,7 };
+
+	printf("=== 퀵소트 이전의 값 ===\n");
+	for (i = 0; i < count; i++)
+	{
+		printf("%2d", num[i]);
+	}
+	printf("\n");
+
+	printf("=== 퀵소트 이후의 값 ===\n");
+	qsort(num, 0, count - 1);
+	for (i = 0; i < count; i++)
+	{
+		printf("%2d", num[i]);
+	}
+	printf("\n");
+	system("pause");
+}
+
+
+void qsort(int *data, int l, int r)
+{
+	int left = l;
+	int right = r;
+	int pivot = data[(l + r) / 2];						//피벗값을 중앙에 위치한 자료로 설정
+
+	do 
+	{
+		while (data[left] < pivot) left++;				//피벗보다 작으면 left 기준위치를 한칸씩 오른쪽으로 이동
+		while (data[right] > pivot) right--;				//피벗보다 크면 right 기준위치를 한칸씩 왼쪽으로 이동
+
+		if (left <= right)								//left의 위치가 right의 위치와 같거나 작을 때. 즉 정렬이 시작되기 전만 검출
+		{
+			int temp = data[left];
+			data[left] = data[right];					//정렬을 하기 위해 값을 바꿈
+			data[right] = temp;
+			left++;										//바꾸는 작업이 끝나면 left 위치를 오른쪽으로 한칸 이동
+			right--;										//마찬가지로 다음 작업을 위해 right 위치를 왼쪽으로 한칸 이동
+		}
+	} while (left <= right);							//left의 위치가 right의 위치보다 같거나 작을 때. 즉 정렬이 끝나기 전까지만 반복
+
+	if (l < right)										//l 의 값이 right보다 적을 때. 즉 바꾸는 작업이 끝났는데 정렬을 돌리기 직전 첫번째 l 위치값이 정렬을 돌린 후의 right 위치값보다 작으면
+	{
+		qsort(data, l, right);							//left 쪽의 값들과 비교해서 정렬을 하기 위해 재귀함수를 호출
+	}
+	if (r > left)										//r 의 값이 left보다 클 때. 즉 바꾸는 작업이 끝났는데 정렬을 돌리기 전의 마지막 r 위치값이 정렬을 돌린 후의 left 위치값보다 크면
+	{
+		qsort(data, left, r);							//마지막까지 비교하여 정렬이 끝났다는 말이므로 right쪽의 값들과 비교를 위해 
+														//정렬작업을 마친 left값을 넣고 다시 한번 돌리게끔 r값을 그대로 넣고 재귀함수 호출
+	}
+}
